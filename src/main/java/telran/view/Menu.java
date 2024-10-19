@@ -1,7 +1,7 @@
 package telran.view;
 
 import java.util.Arrays;
-import java.util.stream.*;
+import java.util.stream.IntStream;
 
 public class Menu implements Item {
     private String name;
@@ -9,16 +9,16 @@ public class Menu implements Item {
     private String symbol = "_";
     private int nSymbols = 15;
 
-    public Menu(String name, Item[] items) {
-        this.name = name;
+    public Menu(String name, Item... items) {
         this.items = Arrays.copyOf(items, items.length);
+        this.name = name;
     }
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
-    public void setNSymbols(int nSymbols) {
+    public void setNsymbols(int nSymbols) {
         this.nSymbols = nSymbols;
     }
 
@@ -34,7 +34,7 @@ public class Menu implements Item {
         boolean running = true;
         do {
             displayItems(io);
-            int itemIndex = io.readNumberRange("Select item", "Wrong Item number", 1, items.length).intValue();
+            int itemIndex = io.readNumberRange("Select item", "Wrong item numbe", 1, items.length).intValue();
             item = items[itemIndex - 1];
             try {
                 item.perform(io);
@@ -46,12 +46,14 @@ public class Menu implements Item {
     }
 
     private void displayItems(InputOutput io) {
-        IntStream.range(0, items.length).forEach(i -> io.writeLine(String.format("%d. %s", i + 1, items[i].displayName())));
+        IntStream.range(0, items.length)
+                .forEach(i -> io.writeLine(String.format("%d. %s", i + 1, items[i].displayName())));
     }
 
     private void displayTitle(InputOutput io) {
+        io.writeLine("\n");
         io.writeString(symbol.repeat(nSymbols));
-        io.writeString(displayName());
+        io.writeString(name);
         io.writeLine(symbol.repeat(nSymbols));
     }
 
